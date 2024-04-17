@@ -12,7 +12,7 @@ import java.io.IOException
 
 fun UploadScreen(selectedFiles: List<File>) {
     val client = OkHttpClient()
-    val url = "http://tantan2.com:8000/upload"
+    val url = "http://13.125.247.209"
 
     val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM)
 

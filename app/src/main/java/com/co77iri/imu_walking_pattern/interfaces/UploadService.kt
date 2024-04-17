@@ -13,18 +13,18 @@ import retrofit2.http.Part
 
 interface UploadService {
     @Multipart
-    @POST("upload")
+    @POST("/")
 //    fun uploadFiles(@Part requestBody: MultipartBody): Call<ResponseBody>
     fun uploadCsv(@Part files: List<MultipartBody.Part>): Call<Void>
 }
 
 interface JsonUploadService {
-    @Multipart
-    @POST("/upload_test")
+//    @Multipart
+    @POST("test")
     fun uploadFiles(
-        @Part file_l: MultipartBody.Part,
-        @Part file_r: MultipartBody.Part,
-        @Part("data") data: RequestBody
+//        @Part file_l: MultipartBody.Part,
+//        @Part file_r: MultipartBody.Part,
+        @Body data: RequestBody
     ): Call<ResponseBody>
 //    @POST("upload_json")
 //    fun uploadData(@Body data: List<UploadJsonData>): Call<Void>

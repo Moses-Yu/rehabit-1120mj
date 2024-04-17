@@ -76,6 +76,38 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import java.io.File
+import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.navigation.compose.rememberNavController
+import androidx.test.core.app.ApplicationProvider
+
+
+class ContextProvider : PreviewParameterProvider<Context> {
+    override val values: Sequence<Context>
+        get() = sequenceOf(ApplicationProvider.getApplicationContext())
+}
+@Preview
+@Composable
+fun PreviewCsvResultScreen(
+) {
+    // Assuming dummy implementations for NavController and ViewModels
+    val context = LocalContext.current
+    val navController = rememberNavController()
+    val dummyApplication = Application()
+    val resultViewModel = ResultViewModel(application = dummyApplication)  // Setup with dummy or test data
+    val profileViewModel = ProfileViewModel()  // Setup with dummy or test data
+
+    CsvResultScreen(
+        context,
+        navController,
+        resultViewModel,
+        profileViewModel
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +148,7 @@ fun CsvResultScreen(
     )
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://co77iri.com:8001")
+        .baseUrl("http://13.125.247.209/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
@@ -172,21 +204,32 @@ fun CsvResultScreen(
                                 val body_l = MultipartBody.Part.createFormData("csvFile_l", csv_l.name, requestFile_l)
                                 val body_r = MultipartBody.Part.createFormData("csvFile_r", csv_r.name, requestFile_r)
 
-                                val call = apiService.uploadFiles(body_l, body_r, requestBody)
+//                                val call = apiService.uploadFiles(body_l, body_r, requestBody)
+                                val call = apiService.uploadFiles(requestBody)
                                 call.enqueue(object : Callback<ResponseBody> {
                                     override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                                         if (response.isSuccessful) {
                                             // 업로드 성공 시 처리
                                             Log.d("Upload", "Upload succeeded")
+                                            Toast.makeText(context, "Upload succeeded", Toast.LENGTH_SHORT).show()
+                                            println("Upload"+ "Upload succeeded")
+                                            println(response)
                                         } else {
                                             // 서버 오류 등 업로드 실패 시 처리
                                             Log.e("Upload", "Upload failed")
+                                            Log.e("Upload", response.toString())
+                                            Toast.makeText(context, "Upload failed", Toast.LENGTH_SHORT).show()
+                                            println("Upload" + "Upload failed")
+                                            println(response)
                                         }
                                     }
 
                                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                                         // 네트워크 문제 등으로 요청 자체가 실패한 경우 처리
                                         Log.e("Upload", "Request failed", t)
+                                        Toast.makeText(context, "Request failed"+t, Toast.LENGTH_SHORT).show()
+                                        println("Request failed")
+                                        println(t)
                                     }
                                 })
 
